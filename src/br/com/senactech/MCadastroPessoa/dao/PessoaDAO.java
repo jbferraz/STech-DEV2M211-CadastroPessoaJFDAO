@@ -96,4 +96,52 @@ public class PessoaDAO {
 
         return verCPF;
     }
+    
+    public Pessoa getByDocBD(String cpf) throws SQLException{
+        //Busca conexão com o BD
+        Connection con = Conexao.getConexao();
+        Statement stat = con.createStatement();
+        Pessoa p = new Pessoa();
+        
+        try {
+            String sql;
+            sql = "select * from pessoa where cpf = " + cpf;
+            ResultSet rs = stat.executeQuery(sql);
+            while (rs.next()) {
+                //lado do java |x| lado do banco
+                p.setIdPessoa(rs.getInt("idPessoa"));
+                p.setNomePessoa(rs.getString("nomePessoa"));
+                p.setCpf(rs.getString("cpf"));
+                p.setEndereco(rs.getString("endereco"));
+                p.setTelefone(rs.getString("telefone"));
+                p.setIdade(rs.getInt("idade"));
+                p.setStatus(rs.getBoolean("status"));
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Pessoa com este CPF não existe. \n"
+                    + e.getMessage());
+        } finally {
+            con.close();
+            stat.close();
+        }
+        
+        return p;
+    }
+    
+    public void deletarPessoa(int id) throws SQLException{
+        //Busca conexão com o BD
+        Connection con = Conexao.getConexao();
+        Statement stat = con.createStatement();
+        try {
+            String sql;
+            sql = "delete from pessoa where idPessoa = " + id;
+            stat.execute(sql);
+        } catch (SQLException e) {
+            throw new SQLException("Erro ao deletar Pessoa. \n"
+                    + e.getMessage());
+        } finally {
+            con.close();
+            stat.close();
+        }
+    }
 }

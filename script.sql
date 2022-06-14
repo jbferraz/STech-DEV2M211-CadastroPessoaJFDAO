@@ -7,7 +7,7 @@ CREATE TABLE pessoa (
     nomePessoa VARCHAR(60) NOT NULL,
     cpf VARCHAR(20) UNIQUE,
     endereco VARCHAR(60),
-    telefonpessoae VARCHAR(20),
+    telefone VARCHAR(20),
     idade INT,
     status BOOLEAN
 );

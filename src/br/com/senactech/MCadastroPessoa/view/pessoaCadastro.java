@@ -553,7 +553,14 @@ public class pessoaCadastro extends javax.swing.JFrame {
         String cpf;
         linha = jtPessoas.getSelectedRow();
         cpf = (String) jtPessoas.getValueAt(linha, 1);
-        Pessoa p = cadPessoas.getByDoc(cpf);
+        //Pessoa p = cadPessoas.getByDoc(cpf);
+        PessoaServicos pessoaS = ServicosFactory.getPessoaServicos();
+        Pessoa p = new Pessoa();
+        try {
+            p = pessoaS.buscarPessoaBD(cpf);
+        } catch (SQLException ex) {
+            Logger.getLogger(pessoaCadastro.class.getName()).log(Level.SEVERE, null, ex);
+        }
 //        int resposta = JOptionPane.showConfirmDialog(this,
 //                "Deseja realmente deletar " + p.getNomePessoa() + "?",
 //                ".: Deletar :.", JOptionPane.YES_NO_OPTION,
@@ -565,7 +572,8 @@ public class pessoaCadastro extends javax.swing.JFrame {
                 JOptionPane.WARNING_MESSAGE, null, resp, resp[0]);
         if (resposta == 0) {
             try {
-                cadPessoas.deletar(p);
+                //cadPessoas.deletar(p);
+                pessoaS.deletarPessoaBD(p.getIdPessoa());
                 //addRowToTable();
                 addRowToTableBD();
                 JOptionPane.showMessageDialog(this, "Pessoa deletada com sucesso!",
