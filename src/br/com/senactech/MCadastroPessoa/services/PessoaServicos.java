@@ -26,4 +26,9 @@ public class PessoaServicos {
         PessoaDAO pDAO = DAOFactory.getPessoaDAO();
         return pDAO.buscarPessoas();
     }
+    
+    public boolean verCPF (String cpf) throws SQLException{
+        PessoaDAO pDAO = DAOFactory.getPessoaDAO();
+        return pDAO.verCPF(cpf);
+    }
 }

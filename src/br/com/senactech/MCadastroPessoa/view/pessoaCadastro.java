@@ -16,6 +16,11 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import static mcadastropessoaJF.MCadastroPessoaJF.cadPessoas;
+import br.com.senactech.MCadastroPessoa.services.PessoaServicos;
+import br.com.senactech.MCadastroPessoa.services.ServicosFactory;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -27,12 +32,14 @@ public class pessoaCadastro extends javax.swing.JFrame {
 
     /**
      * Creates new form pessoaCadastro
+     * @throws java.sql.SQLException
      */
-    public pessoaCadastro() {
+    public pessoaCadastro() throws SQLException {
         initComponents();
         this.setLocationRelativeTo(null);
 //        cadPessoas.mokPessoas();
-        addRowToTable();
+        //addRowToTable();
+        addRowToTableBD();
     }
 
     public void addRowToTable() {
@@ -53,6 +60,26 @@ public class pessoaCadastro extends javax.swing.JFrame {
             model.addRow(rowData);
         }
     }
+    
+    public void addRowToTableBD() throws SQLException{
+        //Cria obj model e recebe a modelagem da tabela JtPessoa do JFrame
+        DefaultTableModel model = (DefaultTableModel) jtPessoas.getModel();
+        model.getDataVector().removeAllElements();
+        model.fireTableDataChanged();
+        Object rowData[] = new Object[4]; //cria vetor para as colunas da tabela
+        PessoaServicos pessoaS = ServicosFactory.getPessoaServicos();
+        for (Pessoa p : pessoaS.getPessoas()) {
+            rowData[0] = p.getNomePessoa();
+            rowData[1] = p.getCpf();
+            rowData[2] = p.getTelefone();
+            if (p.isStatus()) {
+                rowData[3] = "Ativo";
+            } else {
+                rowData[3] = "Inativo";
+            }
+            model.addRow(rowData);
+        }
+    }
 
     public void jTableFilterClear() {
         DefaultTableModel model = (DefaultTableModel) jtPessoas.getModel();
@@ -61,7 +88,7 @@ public class pessoaCadastro extends javax.swing.JFrame {
         sorter.setRowFilter(null);
     }
 
-    public Boolean validaImputs() {
+    public Boolean validaInputs() {
         String telefone = jtfTelefone.getText();
         if (jtfNome.getText().isBlank()
                 || jtfCPF.getText().isBlank()
@@ -93,18 +120,23 @@ public class pessoaCadastro extends javax.swing.JFrame {
             }
         }
         if (btnClick.getText() == "Salvar") {
+            PessoaServicos pessoaS = ServicosFactory.getPessoaServicos();
             if (!ValidaCPF.isCPF(jtfCPF.getText())) {
                 JOptionPane.showMessageDialog(this,
                         "CPF informado esta incorreto!!!",
                         ".: Erro :.", JOptionPane.ERROR_MESSAGE);
                 jtfCPF.requestFocus();
                 return false;
-            } else if (cadPessoas.verCPF(jtfCPF.getText())) {
-                JOptionPane.showMessageDialog(this,
-                        "CPF já cadastrado!!!",
-                        ".: Erro :.", JOptionPane.ERROR_MESSAGE);
-                jtfCPF.requestFocus();
-                return false;
+            } else try {
+                if (pessoaS.verCPF(jtfCPF.getText())) {
+                    JOptionPane.showMessageDialog(this,
+                            "CPF já cadastrado!!!",
+                            ".: Erro :.", JOptionPane.ERROR_MESSAGE);
+                    jtfCPF.requestFocus();
+                    return false;
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(pessoaCadastro.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return true;
@@ -425,7 +457,7 @@ public class pessoaCadastro extends javax.swing.JFrame {
         jbEditar.setEnabled(false);
         jbConfirmar.setEnabled(false);
         jbDeletar.setEnabled(false);
-        
+
         jTableFilterClear();
     }//GEN-LAST:event_jbLimparActionPerformed
 
@@ -476,7 +508,7 @@ public class pessoaCadastro extends javax.swing.JFrame {
         btnClick = (JButton) evt.getSource();
         System.out.println(btnClick.getText());
 
-        if (validaImputs()) {
+        if (validaInputs()) {
             int id = cadPessoas.gerarId();
             String nomePessoa = jtfNome.getText();
             String cpf = jtfCPF.getText();
@@ -486,12 +518,20 @@ public class pessoaCadastro extends javax.swing.JFrame {
             boolean status = jrbAtivo.isSelected();
 
             Pessoa p = new Pessoa(id, nomePessoa, cpf, endereco, telefone, idade, status);
-            cadPessoas.add(p);
+            //cadPessoas.add(p);
+            PessoaServicos pessoaS = ServicosFactory.getPessoaServicos();
+            try {
+                pessoaS.cadPessoa(p);
+                jbLimpar.doClick();
+                //addRowToTable();
+                addRowToTableBD();
+                JOptionPane.showMessageDialog(this, "Pessoa foi salva com sucesso!");
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(rootPane,
+                        "Erro! " + ex.getMessage(),
+                        "erro", JOptionPane.ERROR_MESSAGE);
+            }
 
-            JOptionPane.showMessageDialog(this, "Pessoa foi salva com sucesso!");
-
-            jbLimpar.doClick();
-            addRowToTable();
         }
     }//GEN-LAST:event_jbSalvarActionPerformed
 
@@ -524,10 +564,15 @@ public class pessoaCadastro extends javax.swing.JFrame {
                 ".: Deletar :.", JOptionPane.DEFAULT_OPTION,
                 JOptionPane.WARNING_MESSAGE, null, resp, resp[0]);
         if (resposta == 0) {
-            cadPessoas.deletar(p);
-            addRowToTable();
-            JOptionPane.showMessageDialog(this, "Pessoa deletada com sucesso!",
-                    ".: Deletar :.", JOptionPane.INFORMATION_MESSAGE);
+            try {
+                cadPessoas.deletar(p);
+                //addRowToTable();
+                addRowToTableBD();
+                JOptionPane.showMessageDialog(this, "Pessoa deletada com sucesso!",
+                        ".: Deletar :.", JOptionPane.INFORMATION_MESSAGE);
+            } catch (SQLException ex) {
+                Logger.getLogger(pessoaCadastro.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else {
             JOptionPane.showMessageDialog(this, "Entendemos sua decisão!",
                     ".: Deletar :.", JOptionPane.INFORMATION_MESSAGE);
@@ -570,7 +615,7 @@ public class pessoaCadastro extends javax.swing.JFrame {
     private void jbConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbConfirmarActionPerformed
         // TODO add your handling code here:
         btnClick = (JButton) evt.getSource();
-        if (validaImputs()) {
+        if (validaInputs()) {
             Pessoa p = cadPessoas.getByDoc(jtfCPF.getText());
 
             p.setNomePessoa(jtfNome.getText());
@@ -583,7 +628,12 @@ public class pessoaCadastro extends javax.swing.JFrame {
             } else {
                 p.setStatus(false);
             }
-            addRowToTable();
+            try {
+                //addRowToTable();
+                addRowToTableBD();
+            } catch (SQLException ex) {
+                Logger.getLogger(pessoaCadastro.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
             jbLimpar.doClick();
             jbLimpar.setText("Limpar");
@@ -675,7 +725,11 @@ public class pessoaCadastro extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new pessoaCadastro().setVisible(true);
+                try {
+                    new pessoaCadastro().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(pessoaCadastro.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

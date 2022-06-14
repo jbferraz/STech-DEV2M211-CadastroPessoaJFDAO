@@ -72,6 +72,28 @@ public class PessoaDAO {
             con.close();
         }
     }
-    
-    
+
+    public boolean verCPF(String cpf) throws SQLException {
+        //Busca conexão com o BD
+        Connection con = Conexao.getConexao();
+        Statement stat = con.createStatement();
+        boolean verCPF = false;
+
+        try {
+            String sql;
+            sql = "select cpf from pessoa where cpf = " + cpf;
+            ResultSet rs = stat.executeQuery(sql);
+            while (rs.next()) {
+                verCPF = rs.wasNull();
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Pessoa com este CPF não existe. \n"
+                    + e.getMessage());
+        } finally {
+            con.close();
+            stat.close();
+        }
+
+        return verCPF;
+    }
 }
