@@ -10,9 +10,16 @@ package br.com.senactech.MCadastroPessoa.services;
  * @author jairb
  */
 public class ServicosFactory {
+
     private static PessoaServicos pessoaServicos = new PessoaServicos();
-    
-    public static PessoaServicos getPessoaServicos(){
+
+    public static PessoaServicos getPessoaServicos() {
         return pessoaServicos;
+    }
+
+    private static CarroServicos carroServicos = new CarroServicos();
+
+    public static CarroServicos getCarroServicos() {
+        return carroServicos;
     }
 }
