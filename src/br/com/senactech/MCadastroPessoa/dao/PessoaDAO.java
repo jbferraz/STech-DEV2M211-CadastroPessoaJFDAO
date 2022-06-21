@@ -96,13 +96,13 @@ public class PessoaDAO {
 
         return verCPF;
     }
-    
-    public Pessoa getByDocBD(String cpf) throws SQLException{
+
+    public Pessoa getByDocBD(String cpf) throws SQLException {
         //Busca conexão com o BD
         Connection con = Conexao.getConexao();
         Statement stat = con.createStatement();
         Pessoa p = new Pessoa();
-        
+
         try {
             String sql;
             sql = "select * from pessoa where cpf = " + cpf;
@@ -124,11 +124,11 @@ public class PessoaDAO {
             con.close();
             stat.close();
         }
-        
+
         return p;
     }
-    
-    public void deletarPessoa(int id) throws SQLException{
+
+    public void deletarPessoa(int id) throws SQLException {
         //Busca conexão com o BD
         Connection con = Conexao.getConexao();
         Statement stat = con.createStatement();
@@ -144,15 +144,15 @@ public class PessoaDAO {
             stat.close();
         }
     }
-    
-    public void atualizarPessoa (Pessoa pVO) throws SQLException{
+
+    public void atualizarPessoa(Pessoa pVO) throws SQLException {
         //Busca conexão com o BD
         Connection con = Conexao.getConexao();
         Statement stat = con.createStatement();
-        
+
         try {
             String sql;
-            sql = "update pessoa set " 
+            sql = "update pessoa set "
                     + "nomePessoa = '" + pVO.getNomePessoa() + "', "
                     + "endereco = '" + pVO.getEndereco() + "', "
                     + "idade = " + pVO.getIdade() + ", "
@@ -163,9 +163,41 @@ public class PessoaDAO {
         } catch (SQLException e) {
             throw new SQLException("Erro ao atualizar Pessoa. \n"
                     + e.getMessage());
-        } finally{
+        } finally {
             con.close();
             stat.close();
         }
+    }
+
+    public String getNomePessoa(int id) throws SQLException {
+        String nomePessoa = null;
+        try {
+            for (Pessoa pes : buscarPessoas()) {
+                if (pes.getIdPessoa() == id) {
+                    nomePessoa = pes.getNomePessoa();
+                    break;
+                }
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Pessoa com este id não existe. \n"
+                    + e.getMessage());
+        }
+        return nomePessoa;
+    }
+    
+    public int getIdPessoa(String cpf) throws SQLException {
+        int idPessoa = 0;
+        try {
+            for (Pessoa pes : buscarPessoas()) {
+                if (pes.getCpf().equals(cpf)) {
+                    idPessoa = pes.getIdPessoa();
+                    break;
+                }
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Pessoa com este id não existe. \n"
+                    + e.getMessage());
+        }
+        return idPessoa;
     }
 }

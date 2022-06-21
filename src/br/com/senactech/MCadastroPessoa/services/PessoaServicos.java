@@ -16,34 +16,44 @@ import java.util.ArrayList;
  * @author jairb
  */
 public class PessoaServicos {
-    
-    public void cadPessoa(Pessoa pVO) throws SQLException{
+
+    public void cadPessoa(Pessoa pVO) throws SQLException {
         PessoaDAO pDAO = DAOFactory.getPessoaDAO();
         pDAO.cadastrarPessoa(pVO);
     }
-    
-    public ArrayList<Pessoa> getPessoas() throws SQLException{
+
+    public ArrayList<Pessoa> getPessoas() throws SQLException {
         PessoaDAO pDAO = DAOFactory.getPessoaDAO();
         return pDAO.buscarPessoas();
     }
-    
-    public boolean verCPF (String cpf) throws SQLException{
+
+    public boolean verCPF(String cpf) throws SQLException {
         PessoaDAO pDAO = DAOFactory.getPessoaDAO();
         return pDAO.verCPF(cpf);
     }
-    
-    public Pessoa buscarPessoaBD (String cpf) throws SQLException{
+
+    public Pessoa buscarPessoaBD(String cpf) throws SQLException {
         PessoaDAO pDAO = DAOFactory.getPessoaDAO();
         return pDAO.getByDocBD(cpf);
     }
-    
-    public void deletarPessoaBD(int id) throws SQLException{
+
+    public void deletarPessoaBD(int id) throws SQLException {
         PessoaDAO pDAO = DAOFactory.getPessoaDAO();
         pDAO.deletarPessoa(id);
     }
-    
-    public void atualizarPessoaBD(Pessoa pVO) throws SQLException{
+
+    public void atualizarPessoaBD(Pessoa pVO) throws SQLException {
         PessoaDAO pDAO = DAOFactory.getPessoaDAO();
         pDAO.atualizarPessoa(pVO);
+    }
+
+    public String getNomePessoa(int id) throws SQLException {
+        PessoaDAO pDAO = DAOFactory.getPessoaDAO();
+        return pDAO.getNomePessoa(id);
+    }
+
+    public int getIdPessoa(String cpf) throws SQLException {
+        PessoaDAO pDAO = DAOFactory.getPessoaDAO();
+        return pDAO.getIdPessoa(cpf);
     }
 }
