@@ -241,6 +241,11 @@ public class carroCadastro extends javax.swing.JFrame {
         jbPesq.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jbPesq.setForeground(new java.awt.Color(0, 0, 255));
         jbPesq.setText("Pesquisar Placa");
+        jbPesq.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbPesqActionPerformed(evt);
+            }
+        });
 
         jcbMarca.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione...", "Mercedes", "GM", "Peugeot", "Jeep", "Fiat", "Mitsubishi", "Lincoln", "Land Rover", "Jaguard" }));
 
@@ -458,15 +463,22 @@ public class carroCadastro extends javax.swing.JFrame {
     }//GEN-LAST:event_jtfCPFPropFocusLost
 
     private Boolean validaInputs() {
+
         Boolean verPlaca;
         String placa = jtfPlaca.getText().toUpperCase();
-        verPlaca = (placa.length() == 7 && !cadCarros.verPlaca(placa));
-        if (!verPlaca) {
-            String msg = "Placa já cadastrada ou incorreta!";
-            JOptionPane.showMessageDialog(this, msg, ".: Erro :.",
-                    JOptionPane.ERROR_MESSAGE);
-            jtfPlaca.requestFocus();
-            return false;
+        CarroServicos carroS = ServicosFactory.getCarroServicos();
+        try {
+            verPlaca = (placa.length() == 7 && !carroS.verPlaca(placa));
+
+            if (!verPlaca) {
+                String msg = "Placa já cadastrada ou incorreta!";
+                JOptionPane.showMessageDialog(this, msg, ".: Erro :.",
+                        JOptionPane.ERROR_MESSAGE);
+                jtfPlaca.requestFocus();
+                return false;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(carroCadastro.class.getName()).log(Level.SEVERE, null, ex);
         }
         Calendar cal = GregorianCalendar.getInstance();
         int anoAtual = cal.get(Calendar.YEAR);
@@ -536,78 +548,102 @@ public class carroCadastro extends javax.swing.JFrame {
     }//GEN-LAST:event_jtCarrosMouseClicked
 
     private void jbDeletarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbDeletarActionPerformed
-        // TODO add your handling code here:
-        jbEditar.setEnabled(false);
-        int linha;
-        String placa;
-        linha = jtCarros.getSelectedRow();
-        placa = (String) jtCarros.getValueAt(linha, 0);
+        try {
+            // TODO add your handling code here:
+            jbEditar.setEnabled(false);
+            int linha;
+            String placa;
+            linha = jtCarros.getSelectedRow();
+            placa = (String) jtCarros.getValueAt(linha, 0);
+            CarroServicos carroS = ServicosFactory.getCarroServicos();
+            Carro c = carroS.pesquisarPlacaBD(placa);
 
-        Carro c = cadCarros.getByDoc(placa);
+            Object[] resp = {"Sim", "Não"};
+            int resposta = JOptionPane.showOptionDialog(this,
+                    "Deseja realmente deletar " + c.getPlaca() + "?",
+                    ".: Deletar :.", JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.WARNING_MESSAGE, null, resp, resp[0]);
+            if (resposta == 0) {
+                carroS.deletarCarroBD(c.getIdCarro());
+                //cadCarros.deletar(c);
+                addRowToTableBD();
+                JOptionPane.showMessageDialog(this, "Carro deletado com sucesso!");
 
-        Object[] resp = {"Sim", "Não"};
-        int resposta = JOptionPane.showOptionDialog(this,
-                "Deseja realmente deletar " + c.getPlaca() + "?",
-                ".: Deletar :.", JOptionPane.DEFAULT_OPTION,
-                JOptionPane.WARNING_MESSAGE, null, resp, resp[0]);
-        if (resposta == 0) {
-            cadCarros.deletar(c);
-            addRowToTable();
-            JOptionPane.showMessageDialog(this, "Carro deletado com sucesso!");
-        } else {
-            JOptionPane.showMessageDialog(this, "Entendemos sua decisão!",
-                    ".: Deletar :.", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Entendemos sua decisão!",
+                        ".: Deletar :.", JOptionPane.INFORMATION_MESSAGE);
+            }
+            jbLimpar.doClick();
+        } catch (SQLException ex) {
+            Logger.getLogger(carroCadastro.class.getName()).log(Level.SEVERE, null, ex);
         }
-        jbLimpar.doClick();
     }//GEN-LAST:event_jbDeletarActionPerformed
 
     private void jbEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbEditarActionPerformed
-        // TODO add your handling code here:
-        jbEditar.setEnabled(false);
-        jbSalvar.setEnabled(false);
-        jbDeletar.setEnabled(false);
-        jbPesq.setEnabled(false);
-        jtfPlaca.setEnabled(false);
-        jbConfirmar.setEnabled(true);
-        jbLimpar.setText("Cancelar");
+        try {
+            // TODO add your handling code here:
+            jbEditar.setEnabled(false);
+            jbSalvar.setEnabled(false);
+            jbDeletar.setEnabled(false);
+            jbPesq.setEnabled(false);
+            jtfPlaca.setEnabled(false);
+            jbConfirmar.setEnabled(true);
+            jbLimpar.setText("Cancelar");
 
-        int linha = jtCarros.getSelectedRow();
-        String placa = (String) jtCarros.getValueAt(linha, 0);
+            int linha = jtCarros.getSelectedRow();
+            String placa = (String) jtCarros.getValueAt(linha, 0);
 
-        Carro c = cadCarros.getByDoc(placa);
+            CarroServicos carroS = ServicosFactory.getCarroServicos();
+            PessoaServicos pessoaS = ServicosFactory.getPessoaServicos();
 
-        jtfPlaca.setText(c.getPlaca());
-        jtfModelo.setText(c.getModelo());
-        jtfAnoF.setText(Integer.toString(c.getAnoFabricacao()));
-        jtfAnoM.setText(Integer.toString(c.getAnoModelo()));
-        jtfCor.setText(c.getCor());
-        jtfPortas.setText(Integer.toString(c.getnPortas()));
-        jtfCPFProp.setText(cadPessoas.getCPFPes(c.getIdPessoa()));
-        jlNomeProp.setText(cadPessoas.getNomePes(c.getIdPessoa()));
-        jcbMarca.setSelectedItem(c.getMarca());
+            Carro c = carroS.pesquisarPlacaBD(placa);
+
+            jtfPlaca.setText(c.getPlaca());
+            jtfModelo.setText(c.getModelo());
+            jtfAnoF.setText(Integer.toString(c.getAnoFabricacao()));
+            jtfAnoM.setText(Integer.toString(c.getAnoModelo()));
+            jtfCor.setText(c.getCor());
+            jtfPortas.setText(Integer.toString(c.getnPortas()));
+            jtfCPFProp.setText(pessoaS.getPessoaById(c.getIdPessoa()).getCpf());
+            jlNomeProp.setText(pessoaS.getPessoaById(c.getIdPessoa()).getNomePessoa());
+            jcbMarca.setSelectedItem(c.getMarca());
+        } catch (SQLException ex) {
+            Logger.getLogger(carroCadastro.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jbEditarActionPerformed
 
     private void jbConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbConfirmarActionPerformed
         // TODO add your handling code here:
         if (validaInputs()) {
-            Carro c = cadCarros.getByDoc(jtfPlaca.getText());
+            try {
+                CarroServicos carroS = ServicosFactory.getCarroServicos();
+                PessoaServicos pessoaS = ServicosFactory.getPessoaServicos();
+                Carro c = carroS.pesquisarPlacaBD(jtfPlaca.getText());
 
-            c.setAnoFabricacao(Integer.parseInt(jtfAnoF.getText()));
-            c.setAnoModelo(Integer.parseInt(jtfAnoM.getText()));
-            c.setCor(jtfCor.getText());
-            c.setMarca(jcbMarca.getSelectedItem().toString());
-            c.setModelo(jtfModelo.getText());
-            c.setnPortas(Integer.parseInt(jtfPortas.getText()));
-            c.setIdPessoa(cadPessoas.pesqIdPes(jtfCPFProp.getText()));
+                c.setAnoFabricacao(Integer.parseInt(jtfAnoF.getText()));
+                c.setAnoModelo(Integer.parseInt(jtfAnoM.getText()));
+                c.setCor(jtfCor.getText());
+                c.setMarca(jcbMarca.getSelectedItem().toString());
+                c.setModelo(jtfModelo.getText());
+                c.setnPortas(Integer.parseInt(jtfPortas.getText()));
+                c.setIdPessoa(pessoaS.getIdPessoa(jtfCPFProp.getText()));
 
-            addRowToTable();
+                carroS.atualizarCarroBD(c);
+                addRowToTableBD();
 
-            jbLimpar.doClick();
-            jbLimpar.setText("Limpar");
+                jbLimpar.doClick();
+                jbLimpar.setText("Limpar");
 
-            JOptionPane.showMessageDialog(this, "Carro atualizado com sucesso!!!");
+                JOptionPane.showMessageDialog(this, "Carro atualizado com sucesso!!!");
+            } catch (SQLException ex) {
+                Logger.getLogger(carroCadastro.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_jbConfirmarActionPerformed
+
+    private void jbPesqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbPesqActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jbPesqActionPerformed
 
     /**
      * @param args the command line arguments

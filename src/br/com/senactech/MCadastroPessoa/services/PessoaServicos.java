@@ -56,4 +56,9 @@ public class PessoaServicos {
         PessoaDAO pDAO = DAOFactory.getPessoaDAO();
         return pDAO.getIdPessoa(cpf);
     }
+    
+    public Pessoa getPessoaById(int id) throws SQLException{
+        PessoaDAO pDAO = DAOFactory.getPessoaDAO();
+        return pDAO.getPessoaById(id);
+    }
 }

@@ -84,13 +84,14 @@ public class CarroDAO {
         boolean verPlaca = false;
         try {
             String sql;
-            sql = "select placa from carro where placa = " + placa;
+            sql = "select placa from carro where placa = '" + placa + "'";
             ResultSet rs = stat.executeQuery(sql);
             while (rs.next()) {
                 verPlaca = rs.wasNull();
             }
         } catch (SQLException e) {
-            throw new SQLException("Carro com esta placa não existe. \n" + e.getMessage());
+            throw new SQLException("Carro com esta placa não existe. \n" 
+                    + e.getMessage());
         } finally {
             con.close();
             stat.close();
@@ -106,7 +107,7 @@ public class CarroDAO {
         Carro c = new Carro();
         try {
             String sql;
-            sql = "select * from carro where placa = " + placa;
+            sql = "select * from carro where placa = '" + placa + "'";
             ResultSet rs = stat.executeQuery(sql);
             while (rs.next()) {
                 // lado do java |x| lado do banco
@@ -157,7 +158,7 @@ public class CarroDAO {
                     + "marca = '" + cVO.getMarca()+ "', " 
                     + "modelo = '" +cVO.getModelo()+ "', " 
                     + "anoFabricacao = " + cVO.getAnoFabricacao()+ ", "
-                    + "anoModelo = " + cVO.getModelo() + ", "
+                    + "anoModelo = " + cVO.getAnoModelo()+ ", "
                     + "cor = '" + cVO.getCor()+ "', " 
                     + "nPortas = " + cVO.getnPortas()+ ", "
                     + "idPessoa = " + cVO.getIdPessoa() + " "
