@@ -183,6 +183,18 @@ public class carroCadastro extends javax.swing.JFrame {
 
         jLabel7.setText("Cor:");
 
+        jtfModelo.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jtfModeloFocusLost(evt);
+            }
+        });
+
+        jtfCor.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jtfCorFocusLost(evt);
+            }
+        });
+
         jLabel8.setText("Portas:");
 
         jtfPortas.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -251,6 +263,9 @@ public class carroCadastro extends javax.swing.JFrame {
 
         jtfCPFProp.setToolTipText("Informe o CPF");
         jtfCPFProp.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jtfCPFPropFocusGained(evt);
+            }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jtfCPFPropFocusLost(evt);
             }
@@ -454,7 +469,7 @@ public class carroCadastro extends javax.swing.JFrame {
                         ".: Erro :.", JOptionPane.ERROR_MESSAGE);
                 jtfCPFProp.requestFocus();
             } else if (!pessoaS.verCPF(jtfCPFProp.getText())) {
-                int id = pessoaS.getIdPessoa(jtfCPFProp.getText());
+                int id = pessoaS.buscarPessoaBD(jtfCPFProp.getText()).getIdPessoa();
                 jlNomeProp.setText(pessoaS.getNomePessoa(id));
             }
         } catch (SQLException ex) {
@@ -517,7 +532,7 @@ public class carroCadastro extends javax.swing.JFrame {
                 CarroServicos carroS = ServicosFactory.getCarroServicos();
                 PessoaServicos pessoaS = ServicosFactory.getPessoaServicos();
                 int id = cadCarros.gerarId();
-                int idPessoa = pessoaS.getIdPessoa(jtfCPFProp.getText());
+                int idPessoa = pessoaS.buscarPessoaBD(jtfCPFProp.getText()).getIdPessoa();
                 String placa = jtfPlaca.getText();
                 String marca = jcbMarca.getSelectedItem().toString();
                 String modelo = jtfModelo.getText();
@@ -626,7 +641,7 @@ public class carroCadastro extends javax.swing.JFrame {
                 c.setMarca(jcbMarca.getSelectedItem().toString());
                 c.setModelo(jtfModelo.getText());
                 c.setnPortas(Integer.parseInt(jtfPortas.getText()));
-                c.setIdPessoa(pessoaS.getIdPessoa(jtfCPFProp.getText()));
+                c.setIdPessoa(pessoaS.buscarPessoaBD(jtfCPFProp.getText()).getIdPessoa());
 
                 carroS.atualizarCarroBD(c);
                 addRowToTableBD();
@@ -644,6 +659,21 @@ public class carroCadastro extends javax.swing.JFrame {
     private void jbPesqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbPesqActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jbPesqActionPerformed
+
+    private void jtfModeloFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jtfModeloFocusLost
+        // TODO add your handling code here:
+        jtfModelo.setText(jtfModelo.getText().toUpperCase());
+    }//GEN-LAST:event_jtfModeloFocusLost
+
+    private void jtfCPFPropFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jtfCPFPropFocusGained
+        // TODO add your handling code here:
+        jlNomeProp.setText("Tecle Tab para ver o Propietário!");
+    }//GEN-LAST:event_jtfCPFPropFocusGained
+
+    private void jtfCorFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jtfCorFocusLost
+        // TODO add your handling code here:
+        jtfCor.setText(jtfCor.getText().toUpperCase());
+    }//GEN-LAST:event_jtfCorFocusLost
 
     /**
      * @param args the command line arguments

@@ -185,22 +185,6 @@ public class PessoaDAO {
         return nomePessoa;
     }
     
-    public int getIdPessoa(String cpf) throws SQLException {
-        int idPessoa = 0;
-        try {
-            for (Pessoa pes : buscarPessoas()) {
-                if (pes.getCpf().equals(cpf)) {
-                    idPessoa = pes.getIdPessoa();
-                    break;
-                }
-            }
-        } catch (SQLException e) {
-            throw new SQLException("Pessoa com este id não existe. \n"
-                    + e.getMessage());
-        }
-        return idPessoa;
-    }
-    
     public Pessoa getPessoaById(int id) throws SQLException {
         //Busca conexão com o BD
         Connection con = Conexao.getConexao();
