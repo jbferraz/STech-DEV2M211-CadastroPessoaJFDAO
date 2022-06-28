@@ -65,10 +65,10 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jtfPlaca" alignment="0" max="32767" attributes="0"/>
                                       <Component id="jtfAnoF" max="32767" attributes="0"/>
                                       <Component id="jtfCor" alignment="0" max="32767" attributes="0"/>
                                       <Component id="jtfCPFProp" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="jtfPlaca" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -125,9 +125,9 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jSeparator1" min="-2" pref="10" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jtfPlaca" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jbPesq" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jtfPlaca" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -259,14 +259,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Placa:"/>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="jtfPlaca">
-          <Properties>
-            <Property name="toolTipText" type="java.lang.String" value="AAA1234"/>
-          </Properties>
-          <Events>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jtfPlacaFocusLost"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
@@ -427,6 +419,13 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Propriet&#xe1;rio..."/>
             <Property name="toolTipText" type="java.lang.String" value=""/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="jtfPlaca">
+          <Properties>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
+              <Format format="UUU-####" subtype="-1" type="5"/>
+            </Property>
           </Properties>
         </Component>
       </SubComponents>
