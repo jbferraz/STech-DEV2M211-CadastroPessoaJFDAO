@@ -84,7 +84,11 @@ public class CarroDAO {
         boolean verPlaca = false;
         try {
             String sql;
+<<<<<<< Updated upstream
             sql = "select placa from carro where placa = '" + placa + "'";
+=======
+            sql = "select placa from carro where placa = '" + placa +"'";
+>>>>>>> Stashed changes
             ResultSet rs = stat.executeQuery(sql);
             while (rs.next()) {
                 verPlaca = rs.wasNull();
@@ -158,7 +162,11 @@ public class CarroDAO {
                     + "marca = '" + cVO.getMarca()+ "', " 
                     + "modelo = '" +cVO.getModelo()+ "', " 
                     + "anoFabricacao = " + cVO.getAnoFabricacao()+ ", "
+<<<<<<< Updated upstream
                     + "anoModelo = " + cVO.getAnoModelo()+ ", "
+=======
+                    + "anoModelo = " + cVO.getAnoModelo() + ", "
+>>>>>>> Stashed changes
                     + "cor = '" + cVO.getCor()+ "', " 
                     + "nPortas = " + cVO.getnPortas()+ ", "
                     + "idPessoa = " + cVO.getIdPessoa() + " "
