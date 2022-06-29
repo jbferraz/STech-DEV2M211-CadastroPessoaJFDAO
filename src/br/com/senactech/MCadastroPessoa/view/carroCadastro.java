@@ -464,6 +464,8 @@ public class carroCadastro extends javax.swing.JFrame {
             } else if (!pessoaS.verCPF(jtfCPFProp.getText())) {
                 int id = pessoaS.buscarPessoaBD(jtfCPFProp.getText()).getIdPessoa();
                 jlNomeProp.setText(pessoaS.getNomePessoa(id));
+            } else {
+                jlNomeProp.setText("Pessoa não cadastrada!");
             }
         } catch (SQLException ex) {
             Logger.getLogger(carroCadastro.class.getName()).log(Level.SEVERE, null, ex);
@@ -471,21 +473,12 @@ public class carroCadastro extends javax.swing.JFrame {
     }//GEN-LAST:event_jtfCPFPropFocusLost
 
     private Boolean validaInputs() {
-<<<<<<< Updated upstream
-
-        Boolean verPlaca;
-        String placa = jtfPlaca.getText().toUpperCase();
         CarroServicos carroS = ServicosFactory.getCarroServicos();
+        PessoaServicos pessoaS = ServicosFactory.getPessoaServicos();
         try {
-            verPlaca = (placa.length() == 7 && !carroS.verPlaca(placa));
-
-=======
-        try {
-            CarroServicos carroS = ServicosFactory.getCarroServicos();
             Boolean verPlaca;
             String placa = jtfPlaca.getText().toUpperCase();
             verPlaca = (placa.length() == 8 && !carroS.verPlaca(placa));
->>>>>>> Stashed changes
             if (!verPlaca) {
                 String msg = "Placa já cadastrada ou incorreta!";
                 JOptionPane.showMessageDialog(this, msg, ".: Erro :.",
@@ -493,37 +486,6 @@ public class carroCadastro extends javax.swing.JFrame {
                 jtfPlaca.requestFocus();
                 return false;
             }
-<<<<<<< Updated upstream
-        } catch (SQLException ex) {
-            Logger.getLogger(carroCadastro.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Calendar cal = GregorianCalendar.getInstance();
-        int anoAtual = cal.get(Calendar.YEAR);
-        int anoF = Integer.parseInt(jtfAnoF.getText());
-        if (anoF > anoAtual) {
-            String msg = "Ano fabricação inválido!";
-            JOptionPane.showMessageDialog(this, msg, ".: Erro :.",
-                    JOptionPane.ERROR_MESSAGE);
-            jtfAnoF.requestFocus();
-            return false;
-        }
-        boolean testaAnoMod;
-        int anoMod = Integer.parseInt(jtfAnoM.getText());
-        testaAnoMod = cadCarros.verAnoMod(anoF, anoMod);
-        if (!testaAnoMod) {
-            String msg = "Ano modelo inválido!";
-            JOptionPane.showMessageDialog(this, msg, ".: Erro :.",
-                    JOptionPane.ERROR_MESSAGE);
-            jtfAnoM.requestFocus();
-            return false;
-        }
-        if (jcbMarca.getSelectedItem().equals("Selecione...")) {
-            String msg = "Selecione um marca!";
-            JOptionPane.showMessageDialog(this, msg, ".: Erro :.",
-                    JOptionPane.ERROR_MESSAGE);
-            jcbMarca.requestFocus();
-            return false;
-=======
             Calendar cal = GregorianCalendar.getInstance();
             int anoAtual = cal.get(Calendar.YEAR);
             int anoF = Integer.parseInt(jtfAnoF.getText());
@@ -551,10 +513,19 @@ public class carroCadastro extends javax.swing.JFrame {
                 jcbMarca.requestFocus();
                 return false;
             }
-            
+            if (pessoaS.verCPF(jtfCPFProp.getText())) {
+                jlNomeProp.setText("Proprietário inexistente!");
+                String msg = "Primeiro cadastre o portador deste CPF: "
+                        + ValidaCPF.imprimeCPF(jtfCPFProp.getText())
+                        + ". Para assim cadastrar o veículo!";
+                JOptionPane.showMessageDialog(this, msg, ".: Erro :.",
+                        JOptionPane.ERROR_MESSAGE);
+                jtfCPFProp.requestFocus();
+                return false;
+            }
+
         } catch (SQLException ex) {
             Logger.getLogger(carroCadastro.class.getName()).log(Level.SEVERE, null, ex);
->>>>>>> Stashed changes
         }
         return true;
     }
@@ -638,7 +609,6 @@ public class carroCadastro extends javax.swing.JFrame {
             jtfPlaca.setEnabled(false);
             jbConfirmar.setEnabled(true);
             jbLimpar.setText("Cancelar");
-<<<<<<< Updated upstream
 
             int linha = jtCarros.getSelectedRow();
             String placa = (String) jtCarros.getValueAt(linha, 0);
@@ -648,27 +618,14 @@ public class carroCadastro extends javax.swing.JFrame {
 
             Carro c = carroS.pesquisarPlacaBD(placa);
 
-=======
-            
-            int linha = jtCarros.getSelectedRow();
-            String placa = (String) jtCarros.getValueAt(linha, 0);
-            CarroServicos carroS = ServicosFactory.getCarroServicos();
-            Carro c = carroS.pesquisarPlacaBD(placa);
-            
->>>>>>> Stashed changes
             jtfPlaca.setText(c.getPlaca());
             jtfModelo.setText(c.getModelo());
             jtfAnoF.setText(Integer.toString(c.getAnoFabricacao()));
             jtfAnoM.setText(Integer.toString(c.getAnoModelo()));
             jtfCor.setText(c.getCor());
             jtfPortas.setText(Integer.toString(c.getnPortas()));
-<<<<<<< Updated upstream
             jtfCPFProp.setText(pessoaS.getPessoaById(c.getIdPessoa()).getCpf());
             jlNomeProp.setText(pessoaS.getPessoaById(c.getIdPessoa()).getNomePessoa());
-=======
-            jtfCPFProp.setText(cadPessoas.getCPFPes(c.getIdPessoa()));
-            jlNomeProp.setText(cadPessoas.getNomePes(c.getIdPessoa()));
->>>>>>> Stashed changes
             jcbMarca.setSelectedItem(c.getMarca());
         } catch (SQLException ex) {
             Logger.getLogger(carroCadastro.class.getName()).log(Level.SEVERE, null, ex);
@@ -677,25 +634,18 @@ public class carroCadastro extends javax.swing.JFrame {
 
     private void jbConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbConfirmarActionPerformed
         // TODO add your handling code here:
-        System.out.println(jtfPlaca.getText());
         if (validaInputs()) {
             try {
                 CarroServicos carroS = ServicosFactory.getCarroServicos();
-<<<<<<< Updated upstream
                 PessoaServicos pessoaS = ServicosFactory.getPessoaServicos();
                 Carro c = carroS.pesquisarPlacaBD(jtfPlaca.getText());
 
-=======
-                Carro c = carroS.pesquisarPlacaBD(jtfPlaca.getText());
-                
->>>>>>> Stashed changes
                 c.setAnoFabricacao(Integer.parseInt(jtfAnoF.getText()));
                 c.setAnoModelo(Integer.parseInt(jtfAnoM.getText()));
                 c.setCor(jtfCor.getText());
                 c.setMarca(jcbMarca.getSelectedItem().toString());
                 c.setModelo(jtfModelo.getText());
                 c.setnPortas(Integer.parseInt(jtfPortas.getText()));
-<<<<<<< Updated upstream
                 c.setIdPessoa(pessoaS.buscarPessoaBD(jtfCPFProp.getText()).getIdPessoa());
 
                 carroS.atualizarCarroBD(c);
@@ -703,17 +653,6 @@ public class carroCadastro extends javax.swing.JFrame {
 
                 jbLimpar.doClick();
                 jbLimpar.setText("Limpar");
-
-=======
-                c.setIdPessoa(cadPessoas.pesqIdPes(jtfCPFProp.getText()));
-                
-                carroS.atualizarCarroBD(c);
-                addRowToTableBD();
-                
-                jbLimpar.doClick();
-                jbLimpar.setText("Limpar");
-                
->>>>>>> Stashed changes
                 JOptionPane.showMessageDialog(this, "Carro atualizado com sucesso!!!");
             } catch (SQLException ex) {
                 Logger.getLogger(carroCadastro.class.getName()).log(Level.SEVERE, null, ex);

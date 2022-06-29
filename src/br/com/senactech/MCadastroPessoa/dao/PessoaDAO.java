@@ -77,7 +77,7 @@ public class PessoaDAO {
         //Busca conexão com o BD
         Connection con = Conexao.getConexao();
         Statement stat = con.createStatement();
-        boolean verCPF = false;
+        boolean verCPF = true;
 
         try {
             String sql;
