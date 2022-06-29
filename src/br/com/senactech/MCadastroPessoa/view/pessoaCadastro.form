@@ -99,7 +99,7 @@
                                           <Component id="jrbInativo" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="0" attributes="0">
-                                          <Component id="jtfCPF" min="-2" pref="149" max="-2" attributes="0"/>
+                                          <Component id="jftCPFFormated" min="-2" pref="149" max="-2" attributes="0"/>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Component id="jbPesqCPF" min="-2" max="-2" attributes="0"/>
                                       </Group>
@@ -128,8 +128,8 @@
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jtfCPF" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jbPesqCPF" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jftCPFFormated" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -224,13 +224,8 @@
           <Properties>
             <Property name="toolTipText" type="java.lang.String" value="Endere&#xe7;o completo"/>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="jtfCPF">
-          <Properties>
-            <Property name="toolTipText" type="java.lang.String" value="Somente n&#xfa;meros"/>
-          </Properties>
           <Events>
-            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jtfCPFKeyTyped"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jtfEnderecoFocusLost"/>
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="jtfNome">
@@ -238,6 +233,7 @@
             <Property name="toolTipText" type="java.lang.String" value="Nome completo"/>
           </Properties>
           <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jtfNomeFocusLost"/>
             <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jtfNomeKeyTyped"/>
           </Events>
         </Component>
@@ -389,6 +385,13 @@
           <Properties>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
               <Format format="(##)#####-####" subtype="-1" type="5"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="jftCPFFormated">
+          <Properties>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
+              <Format format="###.###.###-##" subtype="-1" type="5"/>
             </Property>
           </Properties>
         </Component>

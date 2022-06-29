@@ -81,7 +81,7 @@ public class PessoaDAO {
 
         try {
             String sql;
-            sql = "select cpf from pessoa where cpf = " + cpf;
+            sql = "select cpf from pessoa where cpf = '" + cpf + "'";
             ResultSet rs = stat.executeQuery(sql);
             while (rs.next()) {
                 verCPF = rs.wasNull();
@@ -105,7 +105,7 @@ public class PessoaDAO {
 
         try {
             String sql;
-            sql = "select * from pessoa where cpf = " + cpf;
+            sql = "select * from pessoa where cpf = '" + cpf + "'";
             ResultSet rs = stat.executeQuery(sql);
             while (rs.next()) {
                 //lado do java |x| lado do banco
