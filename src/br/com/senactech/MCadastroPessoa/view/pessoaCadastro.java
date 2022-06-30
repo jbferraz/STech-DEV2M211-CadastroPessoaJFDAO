@@ -19,7 +19,6 @@ import static mcadastropessoaJF.MCadastroPessoaJF.cadPessoas;
 import br.com.senactech.MCadastroPessoa.services.PessoaServicos;
 import br.com.senactech.MCadastroPessoa.services.ServicosFactory;
 import java.sql.SQLException;
-import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -93,7 +92,7 @@ public class pessoaCadastro extends javax.swing.JFrame {
     public Boolean validaInputs() {
         String telefone = jtfTelefone.getText();
         if (jtfNome.getText().isBlank()
-                || jftCPFFormated.getText().isBlank()
+                || jtfCPFFormated.getText().isBlank()
                 || jtfEndereco.getText().isBlank()
                 || jtfIdade.getText().isBlank()
                 || jtfTelefone.getText().isBlank()
@@ -123,22 +122,22 @@ public class pessoaCadastro extends javax.swing.JFrame {
         }
         if (btnClick.getText() == "Salvar") {
             PessoaServicos pessoaS = ServicosFactory.getPessoaServicos();
-            String cpf = jftCPFFormated.getText().substring(0, 3) 
-                + jftCPFFormated.getText().substring(4, 7)
-                + jftCPFFormated.getText().substring(8, 11)
-                + jftCPFFormated.getText().substring(12, 14);
+            String cpf = jtfCPFFormated.getText().substring(0, 3) 
+                + jtfCPFFormated.getText().substring(4, 7)
+                + jtfCPFFormated.getText().substring(8, 11)
+                + jtfCPFFormated.getText().substring(12, 14);
             if (!ValidaCPF.isCPF(cpf)) {
                 JOptionPane.showMessageDialog(this,
                         "CPF informado esta incorreto!!!",
                         ".: Erro :.", JOptionPane.ERROR_MESSAGE);
-                jftCPFFormated.requestFocus();
+                jtfCPFFormated.requestFocus();
                 return false;
             } else try {
-                if (!pessoaS.verCPF(jftCPFFormated.getText())) {
+                if (!pessoaS.verCPF(jtfCPFFormated.getText())) {
                     JOptionPane.showMessageDialog(this,
                             "CPF já cadastrado!!!",
                             ".: Erro :.", JOptionPane.ERROR_MESSAGE);
-                    jftCPFFormated.requestFocus();
+                    jtfCPFFormated.requestFocus();
                     return false;
                 }
             } catch (SQLException ex) {
@@ -183,7 +182,7 @@ public class pessoaCadastro extends javax.swing.JFrame {
         jbEditar = new javax.swing.JButton();
         jbPesqCPF = new javax.swing.JButton();
         jtfTelefone = new javax.swing.JFormattedTextField();
-        jftCPFFormated = new javax.swing.JFormattedTextField();
+        jtfCPFFormated = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Cadastro Pessoa");
@@ -331,7 +330,7 @@ public class pessoaCadastro extends javax.swing.JFrame {
         }
 
         try {
-            jftCPFFormated.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.###-##")));
+            jtfCPFFormated.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.###-##")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
@@ -386,7 +385,7 @@ public class pessoaCadastro extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jrbInativo))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jftCPFFormated, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jtfCPFFormated, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(jbPesqCPF)))
                                 .addGap(0, 0, Short.MAX_VALUE)))))
@@ -407,7 +406,7 @@ public class pessoaCadastro extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jbPesqCPF)
-                    .addComponent(jftCPFFormated, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jtfCPFFormated, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -458,7 +457,7 @@ public class pessoaCadastro extends javax.swing.JFrame {
 
     private void jbLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbLimparActionPerformed
         // TODO add your handling code here:
-        jftCPFFormated.setText("");
+        jtfCPFFormated.setText("");
         jtfEndereco.setText("");
         jtfIdade.setText("");
         jtfNome.setText("");
@@ -466,7 +465,7 @@ public class pessoaCadastro extends javax.swing.JFrame {
         bgStatus.clearSelection();
         jtfNome.requestFocus();
 
-        jftCPFFormated.setEnabled(true);
+        jtfCPFFormated.setEnabled(true);
         jbSalvar.setEnabled(true);
         jbPesqCPF.setEnabled(true);
         jbEditar.setEnabled(false);
@@ -504,7 +503,7 @@ public class pessoaCadastro extends javax.swing.JFrame {
         if (validaInputs()) {
             int id = 0;
             String nomePessoa = jtfNome.getText();
-            String cpf = jftCPFFormated.getText();
+            String cpf = jtfCPFFormated.getText();
             String endereco = jtfEndereco.getText();
             String telefone = jtfTelefone.getText();
             int idade = Integer.parseInt(jtfIdade.getText());
@@ -588,7 +587,7 @@ public class pessoaCadastro extends javax.swing.JFrame {
             jbDeletar.setEnabled(false);
             jbSalvar.setEnabled(false);
             jbEditar.setEnabled(false);
-            jftCPFFormated.setEnabled(false);
+            jtfCPFFormated.setEnabled(false);
             jbPesqCPF.setEnabled(false);
             jbConfirmar.setEnabled(true);
             jbLimpar.setText("Cancelar");
@@ -603,7 +602,7 @@ public class pessoaCadastro extends javax.swing.JFrame {
             Pessoa p = pessoaS.buscarPessoaBD(cpf);
             
             jtfNome.setText(p.getNomePessoa());
-            jftCPFFormated.setText(p.getCpf());
+            jtfCPFFormated.setText(p.getCpf());
             jtfEndereco.setText(p.getEndereco());
             jtfTelefone.setText(p.getTelefone());
             jtfIdade.setText(Integer.toString(p.getIdade()));
@@ -626,10 +625,10 @@ public class pessoaCadastro extends javax.swing.JFrame {
             //Pessoa p = cadPessoas.getByDoc(jftCPFFormated.getText());
             try {
                 PessoaServicos pessoaS = ServicosFactory.getPessoaServicos();
-                Pessoa p = pessoaS.buscarPessoaBD(jftCPFFormated.getText());
-
+                Pessoa p = pessoaS.buscarPessoaBD(jtfCPFFormated.getText());
+                p.setIdPessoa(pessoaS.buscarPessoaBD(jtfCPFFormated.getText()).getIdPessoa());
                 p.setNomePessoa(jtfNome.getText());
-                //p.setCpf(jftCPFFormated.getText());
+                p.setCpf(jtfCPFFormated.getText());
                 p.setEndereco(jtfEndereco.getText());
                 p.setIdade(Integer.parseInt(jtfIdade.getText()));
                 p.setTelefone(jtfTelefone.getText());
@@ -653,28 +652,28 @@ public class pessoaCadastro extends javax.swing.JFrame {
                     JOptionPane.INFORMATION_MESSAGE);
         } else {
             jbLimpar.doClick();
-            jftCPFFormated.setEnabled(true);
+            jtfCPFFormated.setEnabled(true);
         }
     }//GEN-LAST:event_jbConfirmarActionPerformed
 
     private void jbPesqCPFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbPesqCPFActionPerformed
         // TODO add your handling code here:
         PessoaServicos pessoaS = ServicosFactory.getPessoaServicos();
-        String cpf = jftCPFFormated.getText().substring(0, 3) 
-                + jftCPFFormated.getText().substring(4, 7)
-                + jftCPFFormated.getText().substring(8, 11)
-                + jftCPFFormated.getText().substring(12, 14);
+        String cpf = jtfCPFFormated.getText().substring(0, 3) 
+                + jtfCPFFormated.getText().substring(4, 7)
+                + jtfCPFFormated.getText().substring(8, 11)
+                + jtfCPFFormated.getText().substring(12, 14);
         if (!ValidaCPF.isCPF(cpf)) {
             JOptionPane.showMessageDialog(this,
                     "CPF informado esta incorreto!!!",
                     ".: Erro :.", JOptionPane.ERROR_MESSAGE);
-            jftCPFFormated.requestFocus();
+            jtfCPFFormated.requestFocus();
         } else try {
-            if (!pessoaS.verCPF(jftCPFFormated.getText())) {
+            if (!pessoaS.verCPF(jtfCPFFormated.getText())) {
                 DefaultTableModel model = (DefaultTableModel) jtPessoas.getModel();
                 final TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
                 jtPessoas.setRowSorter(sorter);
-                String text = jftCPFFormated.getText();
+                String text = jtfCPFFormated.getText();
                 if (text.length() == 0) {
                     sorter.setRowFilter(null);
                 } else {
@@ -781,10 +780,10 @@ public class pessoaCadastro extends javax.swing.JFrame {
     private javax.swing.JButton jbPesqCPF;
     private javax.swing.JButton jbSair;
     private javax.swing.JButton jbSalvar;
-    private javax.swing.JFormattedTextField jftCPFFormated;
     private javax.swing.JRadioButton jrbAtivo;
     private javax.swing.JRadioButton jrbInativo;
     private javax.swing.JTable jtPessoas;
+    private javax.swing.JFormattedTextField jtfCPFFormated;
     private javax.swing.JTextField jtfEndereco;
     private javax.swing.JTextField jtfIdade;
     private javax.swing.JTextField jtfNome;

@@ -149,11 +149,11 @@ public class PessoaDAO {
         //Busca conexão com o BD
         Connection con = Conexao.getConexao();
         Statement stat = con.createStatement();
-
         try {
             String sql;
             sql = "update pessoa set "
                     + "nomePessoa = '" + pVO.getNomePessoa() + "', "
+                    + "cpf = '" + pVO.getCpf()+ "', "
                     + "endereco = '" + pVO.getEndereco() + "', "
                     + "idade = " + pVO.getIdade() + ", "
                     + "telefone = '" + pVO.getTelefone() + "', "
